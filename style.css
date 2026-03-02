@@ -1,0 +1,181 @@
+
+:root {
+    --primary: #2c3e50;
+    --accent: #e74c3c;
+    --accent-hover: #c0392b;
+    --bg-body: #f4f7f6;
+    --bg-card: #ffffff;
+    --text-main: #333333;
+    --text-muted: #666666;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --header-overlay: rgba(0, 0, 0, 0.6);
+    --modal-bg: rgba(255, 255, 255, 0.95);
+    --border-color: #ddd;
+}
+
+
+body.dark-mode {
+    --primary: #ecf0f1;
+    --accent: #ff6b6b;
+    --accent-hover: #ff4757;
+    --bg-body: #121212;
+    --bg-card: #1e1e1e;
+    --text-main: #e0e0e0;
+    --text-muted: #aaaaaa;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --header-overlay: rgba(0, 0, 0, 0.8);
+    --modal-bg: #2c2c2c;
+    --border-color: #444;
+}
+
+* { box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0; padding: 0;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+}
+
+
+header {
+    height: 280px;
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
+    position: relative;
+    display: flex; justify-content: center; align-items: center; text-align: center; color: white;
+}
+.overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--header-overlay); }
+.header-content { position: relative; z-index: 2; width: 100%; max-width: 1200px; padding: 20px; }
+
+/* User Panel */
+.user-panel { position: absolute; top: 20px; right: 20px; display: flex; align-items: center; gap: 10px; }
+.divider { color: rgba(255,255,255,0.5); margin: 0 5px; }
+
+/* Tlačítka v hlavičce (Glass effect) */
+.btn-glass {
+    background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: white;
+    padding: 8px 16px; border-radius: 30px; cursor: pointer; backdrop-filter: blur(5px); font-weight: 500;
+}
+.btn-glass:hover { background: white; color: #333; transform: translateY(-2px); }
+.btn-accent { background: var(--accent); border: none; }
+.btn-my-favs { background-color: var(--accent) !important; border: none; }
+
+#dark-mode-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: white; transition: transform 0.3s; }
+#dark-mode-btn:hover { transform: rotate(20deg) scale(1.1); }
+
+h1 { font-size: 3rem; margin: 0; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+header p { font-size: 1.2rem; opacity: 0.9; }
+
+/* --- 4. OVLÁDACÍ PRVKY (Sticky) --- */
+.controls {
+    background: var(--bg-card); padding: 15px 20px;
+    display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 4px 15px var(--shadow);
+    border-bottom: 1px solid var(--border-color);
+}
+.search-wrapper input, select {
+    padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color);
+    background: var(--bg-body); color: var(--text-main); outline: none; font-family: inherit;
+}
+.search-wrapper input { width: 250px; }
+
+/* --- 5. GRID A KARTY --- */
+.container {
+    max-width: 1200px; margin: 40px auto; padding: 0 20px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px;
+}
+
+.card {
+    background: var(--bg-card); border-radius: 12px; overflow: hidden;
+    box-shadow: 0 5px 15px var(--shadow);
+    display: flex; flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+.card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px var(--shadow); }
+
+/* Obrázek s Zoom efektem */
+.img-wrapper { height: 200px; overflow: hidden; position: relative; }
+.card-img {
+    width: 100%; height: 100%; background-size: cover; background-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.card:hover .card-img { transform: scale(1.1); }
+
+.card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+.card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 5px; }
+.card h3 { margin: 0; color: var(--text-main); font-weight: 600; }
+
+/* Srdíčko a Rating */
+.btn-fav { background: none; border: none; cursor: pointer; font-size: 1.4rem; transition: 0.2s; }
+.btn-fav.active { animation: pulse 0.4s ease-in-out; }
+
+.rating-stars { margin-bottom: 10px; cursor: pointer; user-select: none; font-size: 1.1rem; }
+.star { color: #ddd; transition: color 0.2s; }
+.star.filled { color: #f1c40f; }
+.star:hover { transform: scale(1.2); }
+.rating-info { font-size: 0.8rem; color: var(--text-muted); margin-left: 5px; }
+
+.location { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+.desc { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; flex-grow: 1; }
+
+/* Tagy */
+.tags { margin: 10px 0; }
+.tag { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; margin-right: 5px; }
+.tag.easy { background: #d4edda; color: #155724; }
+.tag.medium { background: #fff3cd; color: #856404; }
+.tag.hard { background: #f8d7da; color: #721c24; }
+
+/* Akční tlačítka na kartě */
+.card-actions { display: flex; gap: 10px; margin-top: 15px; }
+.btn-map, .btn-reviews {
+    flex: 1; padding: 10px; border-radius: 6px; text-align: center; text-decoration: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none;
+}
+.btn-map { background: var(--primary); color: white; }
+.btn-reviews { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+.btn-reviews:hover { background: var(--border-color); }
+
+/* --- 6. MODÁLNÍ OKNA --- */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); }
+.modal-content {
+    background: var(--modal-bg); color: var(--text-main);
+    margin: 5vh auto; padding: 30px; width: 90%; max-width: 400px;
+    border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+}
+.modal-content.review-content { max-width: 600px; } /* Širší pro recenze */
+
+.close { position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; color: var(--text-muted); }
+
+/* Formuláře */
+.modal input, .modal textarea {
+    width: 100%; padding: 12px; margin: 10px 0;
+    border: 1px solid var(--border-color); border-radius: 8px;
+    background: var(--bg-body); color: var(--text-main);
+}
+.modal textarea { height: 80px; resize: vertical; }
+
+.btn-full { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
+.btn-gradient { background: linear-gradient(135deg, var(--primary), var(--accent)); }
+.btn-gradient:hover { filter: brightness(1.1); }
+
+.switch-text { font-size: 0.9rem; margin-top: 15px; text-align: center; color: var(--text-muted); }
+.switch-text a { color: var(--accent); font-weight: bold; text-decoration: none; }
+
+/* Seznam recenzí */
+.reviews-list-wrapper { margin-top: 20px; max-height: 300px; overflow-y: auto; text-align: left; }
+.review-item {
+    background: rgba(0,0,0,0.03); padding: 12px; margin-bottom: 10px;
+    border-radius: 8px; border-left: 4px solid var(--accent);
+}
+.review-header { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; }
+.review-user { font-weight: bold; color: var(--primary); }
+.review-stars { color: #f1c40f; }
+.review-text { font-style: italic; color: var(--text-main); font-size: 0.95rem; }
+.no-reviews { color: var(--text-muted); text-align: center; font-style: italic; }
+
+/* Animace */
+.fade-in { animation: fadeIn 0.3s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+footer { text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border-color); margin-top: 40px; }

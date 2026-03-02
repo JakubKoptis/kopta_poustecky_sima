@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toulavé Boty | Pro Verze</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="overlay"></div>
+        <div class="header-content">
+            <div class="user-panel">
+                <button onclick="toggleDarkMode()" id="dark-mode-btn" title="Přepnout režim">🌙</button>
+                <span class="divider">|</span>
+                
+                <div id="logged-out-view">
+                    <button onclick="openModal('login')" class="btn-glass">Přihlásit</button>
+                    <button onclick="openModal('register')" class="btn-glass btn-accent">Registrovat</button>
+                </div>
+
+                <div id="logged-in-view" style="display: none;">
+                    <span id="user-display-name">Host</span>
+                    <button onclick="filterMyFavorites()" class="btn-glass btn-my-favs">❤️ Oblíbené</button>
+                    <button onclick="logoutUser()" class="btn-glass">Odhlásit</button>
+                </div>
+            </div>
+
+            <h1>TOULAVÉ BOTY</h1>
+            <p>Objevuj krásy Česka, sdílej zážitky a hodnoť místa.</p>
+        </div>
+    </header>
+
+    <nav class="controls">
+        <div class="search-wrapper">
+            <input type="text" id="search-input" placeholder="🔍 Kam chceš vyrazit?" onkeyup="filterPlaces()">
+        </div>
+        
+        <div class="filters-wrapper">
+            <select id="filter-location" onchange="filterPlaces()">
+                <option value="all">📍 Všechny lokality</option>
+                <option value="praha">Praha a okolí</option>
+                <option value="stredni-cechy">Střední Čechy</option>
+                <option value="jizni-morava">Jižní Morava</option>
+                <option value="krkonose">Krkonoše</option>
+                <option value="sumava">Šumava</option>
+            </select>
+
+            <select id="filter-difficulty" onchange="filterPlaces()">
+                <option value="all">🏃 Náročnost</option>
+                <option value="easy">Lehká (Procházka)</option>
+                <option value="medium">Střední (Túra)</option>
+                <option value="hard">Těžká (Výšlap)</option>
+            </select>
+
+            <select id="filter-type" onchange="filterPlaces()">
+                <option value="all">🌲 Typ místa</option>
+                <option value="nature">Příroda</option>
+                <option value="landmark">Památka</option>
+                <option value="view">Vyhlídka</option>
+            </select>
+        </div>
+    </nav>
+
+    <main class="container" id="places-grid">
+        </main>
+
+    <div id="auth-modal" class="modal">
+        <div class="modal-content fade-in">
+            <span class="close" onclick="closeAllModals()">×</span>
+            
+            <div id="login-form">
+                <h2>Vítej zpět! 👋</h2>
+                <input type="text" id="login-username" placeholder="Uživatelské jméno">
+                <input type="password" id="login-password" placeholder="Heslo">
+                <button onclick="performLogin()" class="btn-full btn-gradient">Vstoupit</button>
+                <p class="switch-text">Nemáš účet? <a href="#" onclick="switchAuthForm('register')">Zaregistruj se zdarma</a></p>
+            </div>
+
+            <div id="register-form" style="display:none;">
+                <h2>Vytvořit účet 🚀</h2>
+                <input type="text" id="reg-username" placeholder="Vyber si jméno">
+                <input type="password" id="reg-password" placeholder="Vyber si heslo">
+                <button onclick="performRegister()" class="btn-full btn-gradient">Registrovat se</button>
+                <p class="switch-text">Už máš účet? <a href="#" onclick="switchAuthForm('login')">Přihlas se</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="review-modal" class="modal">
+        <div class="modal-content review-content fade-in">
+            <span class="close" onclick="closeAllModals()">×</span>
+            <h2 id="review-modal-title">Recenze místa</h2>
+            
+            <div class="review-input-area">
+                <textarea id="review-text" placeholder="Napiš ostatním, jak se ti tam líbilo... (např. 'Skvělý výhled, ale hodně lidí.')"></textarea>
+                <button onclick="submitReview()" class="btn-full btn-gradient">Odeslat recenzi 💬</button>
+            </div>
+
+            <div class="reviews-list-wrapper">
+                <h3>Názory ostatních cestovatelů:</h3>
+                <div id="reviews-container">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Toulavé Boty - Školní projekt</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
