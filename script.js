@@ -1,4 +1,3 @@
-/* --- 1. DATA APLIKACE --- */
 const placesData = [
     { id: 1, name: "Prachovské skály", location: "krkonose", difficulty: "medium", type: "nature", desc: "Skalní město v Českém ráji. Ideální pro rodiny i turisty.", img: "https://prachovskeskaly.com/images/podzim/image05.jpg", mapsLink: "https://www.google.com/maps/search/?api=1&query=Prachovské+skály" },
     { id: 2, name: "Vyšehrad", location: "praha", difficulty: "easy", type: "landmark", desc: "Historické hradiště v Praze s výhledem na Vltavu.", img: "https://files.praha-vysehrad.cz/4eqcs3aimj06/optimized/alter4.jpg", mapsLink: "https://www.google.com/maps/search/?api=1&query=Vyšehrad" },
@@ -8,11 +7,9 @@ const placesData = [
     { id: 6, name: "Lom Velká Amerika", location: "stredni-cechy", difficulty: "easy", type: "view", desc: "Český Grand Canyon nedaleko Karlštejna.", img: "https://d34-a.sdn.cz/d_34/c_img_QL_q/O1GI6T.jpeg?fl=res,400,225,3", mapsLink: "https://www.google.com/maps/search/?api=1&query=Lom+Velká+Amerika" }
 ];
 
-/* --- 2. GLOBAL STATE (STAV APLIKACE) --- */
 let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 let usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
 
-/* --- 3. INITIALIZATION & DARK MODE --- */
 window.onload = () => {
     initDarkMode();
     updateAuthUI();
@@ -37,7 +34,6 @@ function toggleDarkMode() {
     }
 }
 
-/* --- 4. AUTHENTICATION LOGIC --- */
 function updateAuthUI() {
     const loggedOut = document.getElementById('logged-out-view');
     const loggedIn = document.getElementById('logged-in-view');
@@ -45,13 +41,13 @@ function updateAuthUI() {
 
     if (currentUser) {
         loggedOut.style.display = 'none';
-        loggedIn.style.display = 'flex'; // Flex pro řádkování
+        loggedIn.style.display = 'flex';
         nameSpan.textContent = `👤 ${currentUser.username}`;
     } else {
         loggedOut.style.display = 'block';
         loggedIn.style.display = 'none';
     }
-    filterPlaces(); // Překreslí grid (aktualizuje srdíčka a hvězdičky)
+    filterPlaces();
 }
 
 function performRegister() {
@@ -61,13 +57,12 @@ function performRegister() {
     if (!name || !pass) return alert("❌ Vyplň prosím všechna pole!");
     if (usersDB.find(u => u.username === name)) return alert("⚠️ Uživatel s tímto jménem už existuje!");
 
-    // Inicializace nového uživatele s prázdnými poli pro data
     const newUser = { 
         username: name, 
         password: pass, 
         favorites: [], 
-        ratings: {},      // { placeId: 5, ... }
-        textReviews: {}   // { placeId: "Bylo to super", ... }
+        ratings: {},
+        textReviews: {}
     };
     
     usersDB.push(newUser);
@@ -86,7 +81,6 @@ function performLogin() {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         closeAllModals();
         updateAuthUI();
-        // Toast notification by byla lepší, ale alert stačí
     } else {
         alert("❌ Chybné jméno nebo heslo!");
     }
@@ -95,25 +89,20 @@ function performLogin() {
 function logoutUser() {
     currentUser = null;
     localStorage.removeItem('currentUser');
-    showOnlyFavorites = false; // Reset filtru
+    showOnlyFavorites = false;
     updateAuthUI();
 }
 
 function saveDB() {
     localStorage.setItem('usersDB', JSON.stringify(usersDB));
     if (currentUser) {
-        // Musíme aktualizovat i currentUser v localStorage, aby byl sync
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
     }
 }
 
-/* --- 5. CORE FEATURES (Favorites, Ratings, Reviews) --- */
-
-// A. OBLÍBENÉ
 function toggleFavorite(id) {
-    if (!currentUser) return openModal('login'); // Nepřihlášený -> Login okno
+    if (!currentUser) return openModal('login');
 
-    // Najdeme index v DB pro trvalé uložení
     const idx = usersDB.findIndex(u => u.username === currentUser.username);
     const user = usersDB[idx];
 
@@ -123,29 +112,25 @@ function toggleFavorite(id) {
         user.favorites.push(id);
     }
 
-    // Aktualizujeme stav v paměti i v DB
     usersDB[idx] = user;
     currentUser = user; 
     saveDB();
-    filterPlaces(); // Překreslit (změní barvu srdíčka)
+    filterPlaces();
 }
 
-// B. HODNOCENÍ (HVĚZDIČKY)
 function ratePlace(placeId, starCount) {
     if (!currentUser) return openModal('login');
 
     const idx = usersDB.findIndex(u => u.username === currentUser.username);
-    // Pojistka, kdyby user neměl objekt ratings (stará verze dat)
     if (!usersDB[idx].ratings) usersDB[idx].ratings = {};
     
     usersDB[idx].ratings[placeId] = starCount;
     
     currentUser = usersDB[idx];
     saveDB();
-    filterPlaces(); // Překreslit hvězdy
+    filterPlaces();
 }
 
-// Funkce pro výpočet průměru všech uživatelů
 function getAverageRating(placeId) {
     let sum = 0;
     let count = 0;
@@ -158,10 +143,9 @@ function getAverageRating(placeId) {
     });
 
     if (count === 0) return 0;
-    return (sum / count).toFixed(1); // Např. "4.5"
+    return (sum / count).toFixed(1);
 }
 
-// C. RECENZE (SOCIAL)
 let currentReviewPlaceId = null;
 
 function openReviewModal(placeId) {
@@ -188,8 +172,8 @@ function submitReview() {
     currentUser = usersDB[idx];
     saveDB();
     
-    document.getElementById('review-text').value = ""; // Vymazat pole
-    renderReviewsInModal(currentReviewPlaceId); // Aktualizovat seznam
+    document.getElementById('review-text').value = "";
+    renderReviewsInModal(currentReviewPlaceId);
 }
 
 function renderReviewsInModal(placeId) {
@@ -201,7 +185,6 @@ function renderReviewsInModal(placeId) {
     usersDB.forEach(user => {
         if (user.textReviews && user.textReviews[placeId]) {
             hasReviews = true;
-            // Zjistíme, kolik dal hvězd, pro kontext
             const userStars = (user.ratings && user.ratings[placeId]) ? "⭐".repeat(user.ratings[placeId]) : "";
             
             const html = `
@@ -222,7 +205,6 @@ function renderReviewsInModal(placeId) {
     }
 }
 
-/* --- 6. RENDERING & FILTERS --- */
 let showOnlyFavorites = false;
 
 function filterMyFavorites() {
@@ -235,7 +217,7 @@ function filterMyFavorites() {
         btn.style.background = "#333";
     } else {
         btn.textContent = "❤️ Oblíbené";
-        btn.style.background = ""; // Reset na CSS default
+        btn.style.background = "";
     }
     filterPlaces();
 }
@@ -250,22 +232,18 @@ function renderPlaces(data) {
     }
 
     data.forEach(place => {
-        // A. Zjištění stavu pro aktuálního uživatele
         const isFav = currentUser && currentUser.favorites && currentUser.favorites.includes(place.id);
         const userRating = (currentUser && currentUser.ratings && currentUser.ratings[place.id]) ? currentUser.ratings[place.id] : 0;
         
-        // B. Výpočet průměru
         const avgRating = getAverageRating(place.id);
         const avgText = avgRating > 0 ? `(Průměr: ${avgRating})` : "";
 
-        // C. Generování hvězdiček
         let starsHTML = '';
         for (let i = 1; i <= 5; i++) {
             const filledClass = i <= userRating ? 'filled' : '';
             starsHTML += `<span class="star ${filledClass}" onclick="ratePlace(${place.id}, ${i})">★</span>`;
         }
 
-        // D. Překlad náročnosti
         const diffLabels = { 'easy': 'Lehká', 'medium': 'Střední', 'hard': 'Těžká' };
         
         const cardHTML = `
@@ -310,7 +288,6 @@ function filterPlaces() {
         const mType = type === 'all' || p.type === type;
         const mSearch = p.name.toLowerCase().includes(search);
         
-        // Pokud je zapnutý filtr oblíbených, kontrolujeme i to
         const mFav = showOnlyFavorites ? (currentUser && currentUser.favorites.includes(p.id)) : true;
         
         return mLoc && mDiff && mType && mSearch && mFav;
@@ -323,7 +300,6 @@ function formatLocation(loc) {
     return names[loc] || loc;
 }
 
-/* --- 7. MODAL CONTROL --- */
 function openModal(type) { 
     document.getElementById('auth-modal').style.display = 'block'; 
     switchAuthForm(type); 
@@ -336,7 +312,6 @@ function switchAuthForm(type) {
     document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
     document.getElementById('register-form').style.display = type === 'register' ? 'block' : 'none';
 }
-// Kliknutí mimo okno zavře modal
 window.onclick = (e) => { 
     if (e.target.classList.contains('modal')) closeAllModals(); 
 };
